@@ -329,13 +329,21 @@ export default class Timeline extends React.Component {
     });
 
     if (canDrag) {
+      const innerGridHeight = this._grid 
+        ? _this4._gridDomNode.querySelector(".ReactVirtualized__Grid__innerScrollContainer")
+          .getBoundingClientRect().height 
+        : 0;
       this._itemInteractable
         .draggable({
           enabled: true,
           allowFrom: selectedItemSelector,
           restrict: {
-            restriction: `.${topDivClassId}`,
-            elementRect: {left: 0, right: 1, top: 0, bottom: 1}
+            restriction: `.${topDivClassId}  .ReactVirtualized__Grid`,
+            elementRect: {left: 0, right: 1, top: 0, bottom: 1},
+            offset: {
+              left: this.props.groupOffset,
+              bottom: this._grid ? this._grid.props.height - Math.min(innerGridHeight, this._grid.props.height) : 0
+            },
           }
         })
         .on('dragstart', e => {
